@@ -12,14 +12,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          motion: ['framer-motion'],
-          router: ['react-router-dom'],
-          forms: ['react-hook-form', 'zod', '@hookform/resolvers'],
-        },
-      },
+      output: {},
     },
   },
 });
