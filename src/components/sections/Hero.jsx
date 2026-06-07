@@ -66,7 +66,7 @@ export default function Hero() {
             className="space-y-5 sm:space-y-8 cursor-default"
           >
             {/* Status badge */}
-            <motion.div variants={fadeInUp} className="flex justify-center">
+            {/* <motion.div variants={fadeInUp} className="flex justify-center">
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-surface/60 backdrop-blur-sm border border-white/[0.06] shadow-[0_0_20px_rgba(16,185,129,0.1)]">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
@@ -76,7 +76,7 @@ export default function Hero() {
                   Available for opportunities
                 </span>
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* Name */}
             <motion.div variants={fadeInUp}>
