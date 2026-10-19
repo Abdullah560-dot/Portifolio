@@ -1,13 +1,11 @@
-import { lazy, Suspense, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { lazy, Suspense, useEffect, useState } from 'react';
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import FloatingParticles from '@/components/effects/FloatingParticles';
-import CustomCursor from '@/components/effects/CustomCursor';
-import LoadingScreen from '@/components/effects/LoadingScreen';
-import ScrollProgressBar from '@/components/effects/ScrollProgressBar';
+
+const FloatingParticles = lazy(() => import('@/components/effects/FloatingParticles'));
+const CustomCursor = lazy(() => import('@/components/effects/CustomCursor'));
+const ScrollProgressBar = lazy(() => import('@/components/effects/ScrollProgressBar'));
 
 // Lazy-loaded sections for code splitting
 const Hero = lazy(() => import('@/components/sections/Hero'));
@@ -29,21 +27,32 @@ function SectionFallback() {
 }
 
 function App() {
-  useEffect(() => {
-    const elements = document.querySelectorAll("*");
+  const [showEnhancements, setShowEnhancements] = useState(false);
 
-    elements.forEach((el) => {
-      if (el.scrollWidth > document.documentElement.clientWidth) {
-        console.log("OVERFLOW:", el);
-      }
+  useEffect(() => {
+    const scheduleEnhancements = () => setShowEnhancements(true);
+    const idleCallback = window.requestIdleCallback?.(scheduleEnhancements, {
+      timeout: 2000,
     });
-  }, [])
+    const timeout = idleCallback === undefined
+      ? window.setTimeout(scheduleEnhancements, 1000)
+      : undefined;
+
+    return () => {
+      if (idleCallback !== undefined) window.cancelIdleCallback?.(idleCallback);
+      if (timeout !== undefined) window.clearTimeout(timeout);
+    };
+  }, []);
+
   return (
     <>
-      <LoadingScreen />
-      <CustomCursor />
-      <ScrollProgressBar />
-      <FloatingParticles count={35} />
+      {showEnhancements && (
+        <Suspense fallback={null}>
+          <CustomCursor />
+          <ScrollProgressBar />
+          <FloatingParticles count={24} />
+        </Suspense>
+      )}
 
       {/* Noise texture overlay */}
       <div className="noise-overlay" />
@@ -82,17 +91,6 @@ function App() {
 
       <Footer />
 
-      <ToastContainer
-        position="bottom-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
     </>
   );
 }
