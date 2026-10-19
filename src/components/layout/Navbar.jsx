@@ -13,15 +13,18 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Track active section
   useEffect(() => {
     const observers = [];
+
     navLinks.forEach(({ id }) => {
       const el = document.getElementById(id);
+
       if (!el) return;
 
       const observer = new IntersectionObserver(
@@ -30,8 +33,12 @@ export default function Navbar() {
             setActiveSection(id);
           }
         },
-        { threshold: 0.3, rootMargin: "-80px 0px -50% 0px" },
+        {
+          threshold: 0.3,
+          rootMargin: "-80px 0px -50% 0px",
+        }
       );
+
       observer.observe(el);
       observers.push(observer);
     });
@@ -41,13 +48,23 @@ export default function Navbar() {
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
+
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
       setIsMobileOpen(false);
+
+      // The mobile menu locks page scrolling. Release it before scrolling so
+      // tapping a menu item can always reach its target section.
+      document.body.style.overflowY = "auto";
+
+      window.requestAnimationFrame(() => {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
     }
   };
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileOpen) {
       document.body.style.overflow = "hidden";
@@ -56,6 +73,7 @@ export default function Navbar() {
       document.body.style.overflow = "unset";
       document.body.style.paddingRight = "0px";
     }
+
     return () => {
       document.body.style.overflow = "unset";
       document.body.style.paddingRight = "0px";
@@ -66,16 +84,19 @@ export default function Navbar() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-x-hidden",
         isScrolled
           ? "bg-background/70 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
-          : "bg-transparent",
+          : "bg-transparent"
       )}
     >
       <nav
-        className="w-full max-w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8"
+        className="mx-auto w-full max-w-7xl px-5 sm:px-6 md:px-8 lg:px-10"
         aria-label="Main navigation"
       >
         <div className="flex items-center justify-between h-16 md:h-20 w-full">
@@ -86,11 +107,12 @@ export default function Navbar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-7 sm:w-9 h-7 sm:h-9 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
               <span className="text-xs sm:text-sm font-bold text-white">
                 AK
               </span>
             </div>
+
             <span className="text-sm sm:text-lg font-bold text-text hidden sm:block truncate">
               Abdullah<span className="text-primary">.</span>
             </span>
@@ -106,16 +128,21 @@ export default function Navbar() {
                   "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer",
                   activeSection === id
                     ? "text-text"
-                    : "text-muted hover:text-text",
+                    : "text-muted hover:text-text"
                 )}
               >
                 {activeSection === id && (
                   <motion.div
                     layoutId="activeNav"
                     className="absolute inset-0 rounded-lg bg-surface-light"
-                    transition={{ type: "spring", duration: 0.5, bounce: 0.15 }}
+                    transition={{
+                      type: "spring",
+                      duration: 0.5,
+                      bounce: 0.15,
+                    }}
                   />
                 )}
+
                 <span className="relative z-10">{label}</span>
               </button>
             ))}
@@ -136,7 +163,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="md:hidden p-1.5 ml-auto rounded-lg text-muted hover:text-text transition-colors cursor-pointer flex-shrink-0"
+            className="md:hidden p-1.5 rounded-lg text-muted hover:text-text transition-colors cursor-pointer flex-shrink-0"
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileOpen}
           >
@@ -156,7 +183,10 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{
+              duration: 0.3,
+              ease: "easeInOut",
+            }}
             className="md:hidden bg-surface/95 backdrop-blur-xl border-t border-border overflow-x-hidden overflow-y-auto max-h-[calc(100vh-4rem)]"
           >
             <div className="w-full px-3 py-3 sm:px-4 sm:py-4 space-y-1">
@@ -168,12 +198,13 @@ export default function Navbar() {
                     "block w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer",
                     activeSection === id
                       ? "bg-primary/10 text-primary"
-                      : "text-muted hover:text-text hover:bg-surface-light/50",
+                      : "text-muted hover:text-text hover:bg-surface-light/50"
                   )}
                 >
                   {label}
                 </button>
               ))}
+
               <div className="pt-1 sm:pt-2">
                 <button
                   onClick={() => scrollToSection("contact")}

@@ -7,7 +7,7 @@ import { fadeInUp, staggerContainer, viewportConfig } from '@/utils/animations';
 export default function Services() {
   return (
     <section id="services" className="relative py-24 md:py-32" aria-label="Services section">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/2 left-0 w-72 h-72 rounded-full bg-accent/5 blur-[100px]" />
       </div>
 

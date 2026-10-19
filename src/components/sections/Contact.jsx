@@ -58,7 +58,7 @@ export default function Contact() {
       className="relative py-24 md:py-32"
       aria-label="Contact section"
     >
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute bottom-0 left-1/3 w-96 h-96 rounded-full bg-primary/5 blur-[120px]" />
       </div>
 

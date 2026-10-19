@@ -16,7 +16,7 @@ export default function Skills() {
   return (
     <section id="skills" className="relative py-24 md:py-32" aria-label="Skills section">
       {/* Decorative background */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-accent/5 blur-[100px]" />
       </div>

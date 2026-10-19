@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,6 +29,15 @@ function SectionFallback() {
 }
 
 function App() {
+  useEffect(() => {
+    const elements = document.querySelectorAll("*");
+
+    elements.forEach((el) => {
+      if (el.scrollWidth > document.documentElement.clientWidth) {
+        console.log("OVERFLOW:", el);
+      }
+    });
+  }, [])
   return (
     <>
       <LoadingScreen />

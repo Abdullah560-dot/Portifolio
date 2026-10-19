@@ -3,6 +3,7 @@ import { fadeInUp, textRevealContainer, textRevealChar, viewportConfig } from '@
 
 export default function SectionHeading({ title, subtitle, label, align = 'center' }) {
   const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
+  const titleAlignClass = align === 'center' ? 'justify-center' : 'justify-start';
 
   // Split title into array of characters (preserving spaces)
   const letters = Array.from(title);
@@ -22,10 +23,10 @@ export default function SectionHeading({ title, subtitle, label, align = 'center
         </span>
       )}
       <motion.h2 
-        className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-2"
+        className="mb-2 w-full max-w-[22rem] text-3xl font-bold tracking-tight sm:max-w-2xl sm:text-4xl md:max-w-none md:text-5xl lg:text-6xl"
         variants={textRevealContainer}
       >
-        <span className="gradient-text inline-flex overflow-hidden pb-2">
+        <span className={`gradient-text flex flex-wrap ${titleAlignClass} overflow-hidden pb-2`}>
           {letters.map((char, index) => (
             <motion.span
               key={index}

@@ -67,7 +67,7 @@ const principles = [
 export default function Philosophy() {
   return (
     <section className="relative py-24 md:py-32" aria-label="Engineering philosophy">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/3 right-0 w-96 h-96 rounded-full bg-primary/5 blur-[120px]" />
       </div>
 

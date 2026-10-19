@@ -19,7 +19,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden py-20 sm:min-h-screen sm:py-0"
       aria-label="Hero section"
     >
       <AuroraBackground />
@@ -52,12 +52,12 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8 sm:py-0">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-5 text-center sm:px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="space-y-6 sm:space-y-8"
+          className="space-y-7 sm:space-y-8"
         >
           <motion.div
             variants={cardTilt}
@@ -80,7 +80,7 @@ export default function Hero() {
 
             {/* Name */}
             <motion.div variants={fadeInUp}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.2] sm:leading-[1.1]">
+              <h1 className="mx-auto max-w-[22rem] text-[clamp(2rem,8.5vw,2.5rem)] font-bold leading-[1.15] tracking-tight sm:max-w-none sm:text-5xl sm:leading-[1.1] md:text-6xl lg:text-7xl xl:text-8xl">
                 <span className="text-text">Hi, I'm </span>
                 <br className="hidden sm:block" />
                 <GradientText animated>Abdullah Kaaka</GradientText>
@@ -102,7 +102,7 @@ export default function Hero() {
           {/* Description */}
           <motion.p
             variants={fadeInUp}
-            className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg lg:text-xl text-muted leading-relaxed sm:leading-relaxed font-sans px-2 sm:px-0"
+            className="mx-auto max-w-[34ch] px-1 font-sans text-[0.9375rem] leading-7 text-muted sm:max-w-2xl sm:px-0 sm:text-base sm:leading-relaxed md:text-lg lg:text-xl"
           >
             I build modern, scalable, and high-performance web applications
             using
@@ -115,13 +115,13 @@ export default function Hero() {
           {/* CTA Buttons */}
           <motion.div
             variants={fadeInUp}
-            className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 pt-4 px-2 sm:px-0"
+            className="flex flex-col flex-wrap items-center justify-center gap-3 pt-2 sm:flex-row sm:gap-4 sm:pt-4"
           >
             <Button
               icon={Eye}
               onClick={() => scrollToSection("projects")}
               size="lg"
-              className="w-full sm:w-auto"
+              className="min-h-14 w-full max-w-sm sm:min-h-0 sm:w-auto sm:max-w-none"
             >
               View Projects
             </Button>
@@ -129,7 +129,7 @@ export default function Hero() {
               variant="secondary"
               icon={Download}
               size="lg"
-              className="w-full sm:w-auto"
+              className="min-h-14 w-full max-w-sm sm:min-h-0 sm:w-auto sm:max-w-none"
             >
               Download CV
             </Button>
