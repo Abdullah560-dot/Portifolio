@@ -91,7 +91,7 @@ export default function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-x-hidden",
         isScrolled
-          ? "bg-background/70 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
+          ? "bg-background/95 md:bg-background/70 md:backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
           : "bg-transparent"
       )}
     >
@@ -187,7 +187,7 @@ export default function Navbar() {
               duration: 0.3,
               ease: "easeInOut",
             }}
-            className="md:hidden bg-surface/95 backdrop-blur-xl border-t border-border overflow-x-hidden overflow-y-auto max-h-[calc(100vh-4rem)]"
+            className="md:hidden bg-surface/98 border-t border-border overflow-x-hidden overflow-y-auto max-h-[calc(100vh-4rem)]"
           >
             <div className="w-full px-3 py-3 sm:px-4 sm:py-4 space-y-1">
               {navLinks.map(({ id, label }) => (

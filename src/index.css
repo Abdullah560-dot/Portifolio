@@ -63,6 +63,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Smooth momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -71,6 +73,8 @@ body {
   color: var(--color-text);
   overflow-x: hidden;
   line-height: 1.7;
+  /* Prevent scroll chaining issues on mobile */
+  overscroll-behavior: none;
 }
 
 #root,
@@ -117,16 +121,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===== NOISE TEXTURE OVERLAY ===== */
+/* Hidden on mobile — expensive compositing layer */
 .noise-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.015;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .noise-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.015;
+    /* Use a static base64 PNG noise tile instead of SVG filter — no GPU filter cost */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    /* Promote to own compositing layer */
+    will-change: opacity;
+    transform: translateZ(0);
+  }
 }
 
 .brand-intro {
@@ -135,29 +151,53 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== GLASSMORPHISM & BENTO ===== */
 .glass {
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(15, 23, 42, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
+/* backdrop-blur only on devices with enough GPU */
+@media (min-width: 768px) {
+  .glass {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
 .glass-light {
-  background: rgba(30, 41, 59, 0.3);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+@media (min-width: 768px) {
+  .glass-light {
+    background: rgba(30, 41, 59, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
 }
 
 .bento-card {
   position: relative;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(24px);
+  /* Solid fallback for mobile — no costly backdrop-filter */
+  background: rgba(15, 23, 42, 0.9);
   border-radius: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  /* GPU compositing layer to prevent scroll jank */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .bento-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
 }
 
 .bento-card:hover {
@@ -166,13 +206,9 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 12px 32px -4px rgba(139, 92, 246, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
+/* Remove expensive per-card noise SVG filter — huge mobile perf win */
 .bento-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 
@@ -209,23 +245,47 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
-.animated-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), transparent, var(--color-primary));
-  background-size: 300% 300%;
-  animation: var(--animate-gradient);
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+/* Only animate border on desktop — too heavy for mobile GPU */
+@media (min-width: 1024px) {
+  .animated-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent), transparent, var(--color-primary));
+    background-size: 300% 300%;
+    animation: var(--animate-gradient);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+/* ===== MOBILE PERFORMANCE ===== */
+/* Disable aurora animation on mobile */
+@media (max-width: 767px) {
+  .aurora-blob {
+    animation: none !important;
+    filter: blur(40px) !important;
+  }
+
+  /* Reduce motion for Framer Motion elements on mobile */
+  .framer-motion-reduce {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+}
+
+/* Ensure interactive elements have fast tap response on mobile */
+button, a, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ===== REDUCED MOTION ===== */

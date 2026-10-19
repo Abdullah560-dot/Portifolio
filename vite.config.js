@@ -11,8 +11,19 @@ export default defineConfig({
     },
   },
   build: {
+    // Target modern browsers for smaller, faster output
+    target: 'es2020',
     rollupOptions: {
-      output: {},
+      output: {
+        // Split vendor chunks for better caching
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'framer-motion': ['framer-motion'],
+          'lucide': ['lucide-react'],
+        },
+      },
     },
+    // Inline small assets instead of extra network requests
+    assetsInlineLimit: 4096,
   },
 });

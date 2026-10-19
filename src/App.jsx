@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/effects/LoadingScreen';
 
+// Desktop-only heavy effects — never loaded on mobile
 const FloatingParticles = lazy(() => import('@/components/effects/FloatingParticles'));
 const CustomCursor = lazy(() => import('@/components/effects/CustomCursor'));
 const ScrollProgressBar = lazy(() => import('@/components/effects/ScrollProgressBar'));
@@ -27,17 +28,26 @@ function SectionFallback() {
   );
 }
 
+// Check once at module level — avoids reactive re-renders
+const isDesktop =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(min-width: 1024px)').matches;
+
 function App() {
   const [showEnhancements, setShowEnhancements] = useState(false);
 
   useEffect(() => {
+    // Only load visual enhancements on desktop — saves mobile from heavy work
+    if (!isDesktop) return;
+
     const scheduleEnhancements = () => setShowEnhancements(true);
     const idleCallback = window.requestIdleCallback?.(scheduleEnhancements, {
       timeout: 2000,
     });
-    const timeout = idleCallback === undefined
-      ? window.setTimeout(scheduleEnhancements, 1000)
-      : undefined;
+    const timeout =
+      idleCallback === undefined
+        ? window.setTimeout(scheduleEnhancements, 1000)
+        : undefined;
 
     return () => {
       if (idleCallback !== undefined) window.cancelIdleCallback?.(idleCallback);
@@ -56,7 +66,7 @@ function App() {
         </Suspense>
       )}
 
-      {/* Noise texture overlay */}
+      {/* Noise texture overlay — hidden on mobile via CSS */}
       <div className="noise-overlay" />
 
       <Navbar />
@@ -92,7 +102,6 @@ function App() {
       </main>
 
       <Footer />
-
     </>
   );
 }

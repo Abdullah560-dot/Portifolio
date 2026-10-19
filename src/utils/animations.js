@@ -103,12 +103,11 @@ export const textRevealContainer = {
 };
 
 export const textRevealChar = {
-  hidden: { opacity: 0, y: 20, rotateX: -90, filter: 'blur(10px)' },
+  hidden: { opacity: 0, y: 20, rotateX: -90 },
   visible: {
     opacity: 1,
     y: 0,
     rotateX: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.8,
       ease: [0.2, 0.65, 0.3, 0.9],
