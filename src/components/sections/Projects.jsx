@@ -1,12 +1,10 @@
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Search, ExternalLink, Code2 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Modal from "@/components/ui/Modal";
 import { projects, projectCategories } from "@/data/projects";
-import { fadeInUp, staggerContainer, viewportConfig } from "@/utils/animations";
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -39,13 +37,7 @@ export default function Projects() {
         />
 
         {/* Controls */}
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportConfig}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-12"
-        >
+        <div className="mb-12 flex flex-col items-center justify-between gap-4 sm:flex-row">
           {/* Category Filters */}
           <div className="flex flex-wrap gap-2">
             {projectCategories.map((cat) => (
@@ -75,28 +67,12 @@ export default function Projects() {
               aria-label="Search projects"
             />
           </div>
-        </motion.div>
+        </div>
 
         {/* Project Grid */}
-        <motion.div
-          layout
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportConfig}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((project) => (
-              <motion.div
-                key={project.id}
-                variants={fadeInUp}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((project) => (
+              <div key={project.id}>
                 <Card
                   className="group h-full flex flex-col cursor-pointer"
                   onClick={() => setSelectedProject(project)}
@@ -163,22 +139,17 @@ export default function Projects() {
                     </div>
                   </div>
                 </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+              </div>
+          ))}
+        </div>
 
         {/* Empty state */}
         {filtered.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-16"
-          >
+          <div className="py-16 text-center">
             <p className="text-muted text-lg">
               No projects found matching your criteria.
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
 

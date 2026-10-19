@@ -5,6 +5,9 @@ export default function FloatingParticles({ count = 40 }) {
   const particles = useRef([]);
   const animationRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const canAnimate =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)').matches;
 
   const initParticles = useCallback((width, height) => {
     particles.current = Array.from({ length: count }, () => ({
@@ -19,6 +22,8 @@ export default function FloatingParticles({ count = 40 }) {
   }, [count]);
 
   useEffect(() => {
+    if (!canAnimate) return undefined;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -105,7 +110,9 @@ export default function FloatingParticles({ count = 40 }) {
       window.removeEventListener('mousemove', handleMouseMove);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [initParticles]);
+  }, [canAnimate, initParticles]);
+
+  if (!canAnimate) return null;
 
   return (
     <canvas
