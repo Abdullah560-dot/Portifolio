@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import LoadingScreen from '@/components/effects/LoadingScreen';
 
 const FloatingParticles = lazy(() => import('@/components/effects/FloatingParticles'));
 const CustomCursor = lazy(() => import('@/components/effects/CustomCursor'));
@@ -46,6 +47,7 @@ function App() {
 
   return (
     <>
+      <LoadingScreen />
       {showEnhancements && (
         <Suspense fallback={null}>
           <CustomCursor />
